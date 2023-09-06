@@ -9,7 +9,7 @@ int main()
     WindowManager *window = new WindowManager(500,500, "Flash Light Simulation") ;
     std::cout << "Welcome to the Fashlight Simulation\n" ;
     window->GLFWindowGeneration(); // generate the window
-    window->run() ;
+    window->simulation() ;
 
 
 

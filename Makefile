@@ -3,7 +3,7 @@ CXXFLAGS = -std=c++17 -Iinclude -Wall -Wextra
 PROJECT = flashlight
 OPENGLFLAGS = -ldl -lglfw
 OBJ = -o
-SRC = flashlight.cpp glad.c WindowManager.cpp
+SRC = flashlight.cpp glad.c shader.cpp WindowManager.cpp
 
 $(PROJECT): $(SRC)
 	$(CXX) $(CXXFLAGS) $(SRC) $(OPENGLFLAGS) $(OBJ) $(PROJECT)
