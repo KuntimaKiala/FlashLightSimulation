@@ -1,5 +1,10 @@
 #include "shader.hpp"
 
+void Shader::use(){
+
+    glUseProgram(id) ;
+
+}
 
 Shader::~Shader(){}
 
