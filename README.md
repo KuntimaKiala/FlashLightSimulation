@@ -5,7 +5,7 @@ This project make uses of OpenGL Texture and CUDA C  <br/>
   *  1- make <br/>
   *  2- ./flashlight  <br/>
 
-# Requiremnts :<br/>
+# Requirements :<br/>
   *  1- glad <br/>
   *  2-  glfw   <br/>
   *  3-  cuda gpu  <br/>
