@@ -1,5 +1,4 @@
 COMPILER =nvcc
-CXXFLAGS =--std=c++17
 PROJECT = flashlight
 OPENGLFLAGS = -ldl -lglfw
 OBJ = -o
