@@ -1,18 +1,5 @@
 #include "KernelLauncher.cuh"
-__device__ 
-float clip(float intensity) {
 
-    return (intensity > 1.0f ? 1.0f: (intensity < 0.0f ? 0.0f:intensity)) ;
-}
-
-__device__
-float smoothstep(float edge0, float edge1, float x) {
-    // Scale, bias, and saturate x to the [0, 1] range
-    x = clip((x - edge0) / (edge1 - edge0));
-
-    // Evaluate the Hermite interpolating polynomial
-    return x * x * (3.0f - 2.0f * x);
-}
 __device__
 float gpu_smoothstep(float edge0, float edge1, float x) {
     float t = fmaxf(0.0f, fminf(1.0f, (x - edge0) / (edge1 - edge0)));
@@ -39,10 +26,11 @@ void Kernel(uchar* data, double x, double y, int width, int height){
     
 
      intensity = fminf(fmaxf(intensity, 0.0f), 1.0f);
-    data[4*offset+1] = 255*intensity ;
-    data[4*offset+2] = 0;
-    data[4*offset+3] = 0 ;
-    data[4*offset+4] = 255 ;
+    data[4*offset+1] = 255 ;
+    data[4*offset+2] = 255;
+    data[4*offset+3] = 255 ;
+    data[4*offset+4] = 255*intensity ;
+   
 
 }
 

@@ -27,6 +27,7 @@ private:
 	void initialize() ; // a function that initializes glfw
 	void renderer()  ; // a function that renders the window, contains the loop 
 	void drawing(GLFWwindow *  window, Shader& program)  ; // a function that actually draws stuffs on screen
+	void createFlashlightTexture(uchar *flashlightTexture);
 	GLFWwindow *  p_window ;
 	int p_width, p_height ;
 	const char*  p_windowName{nullptr};
@@ -34,6 +35,7 @@ private:
 	GLuint _image ;
 	GLuint _texture;
 	KernelLauncher* p_kernelLauncher ; 
+	float p_radius{0.3};
 	
 };
 

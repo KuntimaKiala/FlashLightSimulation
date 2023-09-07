@@ -127,8 +127,8 @@ void WindowManager:: renderer(){
 }
 
 
-void createFlashlightTexture(uchar *flashlightTexture) {
-    int textureSize = 512;  // Adjust the size as needed
+void WindowManager::createFlashlightTexture(uchar *flashlightTexture) {
+    int textureSize = p_width;  // Adjust the size as needed
     float centerX = textureSize / 2.0f;
     float centerY = textureSize / 2.0f;
     float radius = textureSize / 4.0f;  // Adjust the radius as needed
@@ -160,12 +160,14 @@ void WindowManager::drawing(GLFWwindow * window, Shader& program){
     createFlashlightTexture(data_host);
 
     GLuint mouseLocation      = glGetUniformLocation(program.id, "mouse");
+    GLuint windowResolution      = glGetUniformLocation(program.id, "window");
+    GLuint RadiusLocation      = glGetUniformLocation(program.id, "flashlightRadius");
+    
     while (!glfwWindowShouldClose(window))
     {   
        p_kernelLauncher->Launcher(data_host, p_kernelLauncher->mouse.x,p_kernelLauncher->mouse.y);
        if (data_host){
         glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, p_width, p_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data_host);
-        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, p_width, p_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data_host);
         glGenerateMipmap(GL_TEXTURE_2D);
         }
        else{
@@ -186,6 +188,8 @@ void WindowManager::drawing(GLFWwindow * window, Shader& program){
    
        if (p_kernelLauncher->mouse.x ==1 or p_kernelLauncher->mouse.x == 0 or p_kernelLauncher->mouse.y ==1 or p_kernelLauncher->mouse.y == 1) ;
        else glUniform2f(mouseLocation,  p_kernelLauncher->mouse.x, p_kernelLauncher->mouse.y) ; 
+       glUniform2f(windowResolution,  p_width, p_height) ;
+       glUniform1f(RadiusLocation,p_radius);
        
        glBindTexture(GL_TEXTURE_2D, _texture);
        program.use() ;
