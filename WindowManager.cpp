@@ -192,6 +192,6 @@ void WindowManager::drawing(GLFWwindow * window, Shader& program){
         delete[] data_host;
         data_host = nullptr;
     }
-     
+    
      glfwTerminate() ;
 }

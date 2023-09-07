@@ -10,3 +10,5 @@ This project make uses of OpenGL Texture and CUDA C  <br/>
   *  2-  glfw   <br/>
   *  3-  cuda gpu on your PC<br/>
 
+# OS :<br/>
+  * Linux/Ubuntu
