@@ -8,5 +8,5 @@ This project make uses of OpenGL Texture and CUDA C  <br/>
 # Requirements :<br/>
   *  1- glad <br/>
   *  2-  glfw   <br/>
-  *  3-  cuda gpu  <br/>
+  *  3-  cuda gpu on your PC<br/>
 
