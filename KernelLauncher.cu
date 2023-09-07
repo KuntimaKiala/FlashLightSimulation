@@ -15,17 +15,11 @@ void Kernel(uchar* data, double x, double y, int width, int height){
     if ((c >= width) || (r >= height)) return ;
    
     const float distance = sqrt((c-x)*(c-x) + (r-y)*(r-y)) ;
-    // Use a smooth interpolation function (e.g., smoothstep) to calculate intensity
-   
-
-    
     const float flashlightRadius = sqrt(x*x + y*y) ;
+    //  smooth interpolation function (e.g., smoothstep) to calculate intensity
     float intensity = gpu_smoothstep(-1.0f, 1.0f, 1.0f - (distance / flashlightRadius));
     
-    
-    
-
-     intensity = fminf(fmaxf(intensity, 0.0f), 1.0f);
+    intensity = fminf(fmaxf(intensity, 0.0f), 1.0f);
     data[4*offset+1] = 255 ;
     data[4*offset+2] = 255;
     data[4*offset+3] = 255 ;
@@ -40,8 +34,7 @@ void KernelLauncher::Launcher(uchar *data_host, double &x, double& y){
     std::cout << "(x,y) :(" << x << "," << y <<")"<<std::endl;
     //sizeof(uchar) = 1
     //p_nbchannels*p_height*p_width*sizeof(uchar) = 4*w*h*1
-   
-    
+
     cudaMalloc((void**)&data_device, p_nbchannels*p_height*p_width*sizeof(uchar));
     
     dim3 grid(p_width, p_height) ;
@@ -52,9 +45,6 @@ void KernelLauncher::Launcher(uchar *data_host, double &x, double& y){
 KernelLauncher::KernelLauncher(const int& width, const int& height) 
 : p_width(width), p_height(height) {
     p_data = new uchar[p_nbchannels*p_height*p_width*sizeof(uchar)] ;
- 
-
-
 
 }
 

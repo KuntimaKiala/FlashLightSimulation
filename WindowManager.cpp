@@ -11,7 +11,6 @@ p_width(width), p_height(height), p_windowName(windowName)
 WindowManager::~WindowManager()
 {   
     
- 
 }
 
 void WindowManager::initialize() {
@@ -23,8 +22,6 @@ void WindowManager::initialize() {
 }
 void WindowManager::GLFWindowGeneration() {
 
-
-    
     // window creation 
     p_window = glfwCreateWindow( p_width, p_height, p_windowName, NULL, NULL );
 
@@ -47,8 +44,6 @@ void WindowManager::GLFWindowGeneration() {
         glfwTerminate();
         return ;
     }
-
-
 }
 
 
@@ -64,13 +59,10 @@ void WindowManager:: renderer(){
     };
 
     
-    
-
     [[maybe_unused]]unsigned int indices[] = {  
                                     0, 1, 3, // first triangle
                                     1, 2, 3  // second triangle
     };
-
 
     // compile the shader prgram 
     Shader programShader("./texture.vs", "./texture.fs") ;
@@ -105,7 +97,6 @@ void WindowManager:: renderer(){
     
     // load and create a texture 
     // -------------------------
-    
     glGenTextures(1, &_texture);
     glBindTexture(GL_TEXTURE_2D, _texture); // all upcoming GL_TEXTURE_2D operations now have effect on this texture object
     // set the texture wrapping parameters
@@ -123,10 +114,7 @@ void WindowManager:: renderer(){
   
     drawing(p_window, programShader);
  
-   
 }
-
-
 void WindowManager::createFlashlightTexture(uchar *flashlightTexture) {
     int textureSize = p_width;  // Adjust the size as needed
     float centerX = textureSize / 2.0f;
@@ -197,12 +185,10 @@ void WindowManager::drawing(GLFWwindow * window, Shader& program){
        glBindVertexArray(_vao);
        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
        
-       
        glBindVertexArray(0);
        glfwSwapBuffers(window);
        glfwPollEvents() ;
 
-      
     }
 
      if (data_host) {
