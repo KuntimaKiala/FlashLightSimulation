@@ -35,7 +35,7 @@ private:
 	GLuint _image ;
 	GLuint _texture;
 	KernelLauncher* p_kernelLauncher ; 
-	float p_radius{0.25};
+	float p_radius{0.25f};
 	
 };
 
