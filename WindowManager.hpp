@@ -4,8 +4,8 @@
 #include <iostream>
 #include <string_view>
 #include "shader.hpp"
-#include "stb_image.h"
-
+#include "KernelLauncher.cuh"
+#include "cmath"
 namespace VertexAttributes{
 	enum VertexAttributes{
 		vao_position=0,
@@ -33,6 +33,7 @@ private:
 	GLuint _vbo, _ebo, _vao ;
 	GLuint _image ;
 	GLuint _texture;
+	KernelLauncher* p_kernelLauncher ; 
 	
 };
 

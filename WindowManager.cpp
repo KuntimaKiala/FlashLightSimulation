@@ -57,10 +57,10 @@ void WindowManager:: renderer(){
     
     [[maybe_unused]]float vertices[] = {
                                     // positions          // colors           // texture coords
-                                    0.5f,  0.5f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
-                                    0.5f, -0.5f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
-                                   -0.5f, -0.5f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
-                                   -0.5f,  0.5f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
+                                    1.0f,  1.0f, 0.0f,   1.0f, 0.0f, 0.0f,   1.0f, 1.0f, // top right
+                                    1.0f, -1.0f, 0.0f,   0.0f, 1.0f, 0.0f,   1.0f, 0.0f, // bottom right
+                                   -1.0f, -1.0f, 0.0f,   0.0f, 0.0f, 1.0f,   0.0f, 0.0f, // bottom left
+                                   -1.0f,  1.0f, 0.0f,   1.0f, 1.0f, 0.0f,   0.0f, 1.0f  // top left 
     };
 
     
@@ -114,42 +114,85 @@ void WindowManager:: renderer(){
     // set texture filtering parameters
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
     // load image, create texture and generate mipmaps
     int width, height, nrChannels;
     // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char *data = stbi_load("./resources/container.jpg", &width, &height, &nrChannels, 0);
-    if (data)
-    {
-        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
-    }
-    else
-    {
-        std::cout << "Failed to load texture" << std::endl;
-    }
-    stbi_image_free(data);
-
-
+    unsigned char *e;
+    p_kernelLauncher = new KernelLauncher(p_width, p_height) ;
+  
     drawing(p_window, programShader);
  
    
 }
 
 
-void WindowManager::drawing(GLFWwindow * window, Shader& program){
+void createFlashlightTexture(uchar *flashlightTexture) {
+    int textureSize = 512;  // Adjust the size as needed
+    float centerX = textureSize / 2.0f;
+    float centerY = textureSize / 2.0f;
+    float radius = textureSize / 4.0f;  // Adjust the radius as needed
 
+    for (int y = 0; y < textureSize; y++) {
+        for (int x = 0; x < textureSize; x++) {
+            float distance = sqrt((x - centerX) * (x - centerX) + (y - centerY) * (y - centerY));
+            int index = (y * textureSize + x) * 4; // Calculate the index for RGBA components
+
+            if (distance < radius) {
+                // Inside the circle, set RGB to white (fully lit) and A to 255 (fully opaque)
+                flashlightTexture[index] =     255;     // Red (R)
+                flashlightTexture[index + 1] = 255; // Green (G)
+                flashlightTexture[index + 2] = 255; // Blue (B)
+                flashlightTexture[index + 3] = 255; // Alpha (A)
+            } else {
+                // Outside the circle, set RGB to black (no light) and A to 0 (fully transparent)
+                flashlightTexture[index] = 0;     // Red (R)
+                flashlightTexture[index + 1] = 0; // Green (G)
+                flashlightTexture[index + 2] = 0; // Blue (B)
+                flashlightTexture[index + 3] = 0; // Alpha (A)
+            }
+        }
+    }
+}
+
+void WindowManager::drawing(GLFWwindow * window, Shader& program){
+    uchar*data_host  = new uchar[4*p_height*p_width*sizeof(uchar)];
+    createFlashlightTexture(data_host);
+
+    GLuint mouseLocation      = glGetUniformLocation(program.id, "mouse");
     while (!glfwWindowShouldClose(window))
     {   
-        
+       p_kernelLauncher->Launcher(data_host, p_kernelLauncher->mouse.x,p_kernelLauncher->mouse.y);
+       if (data_host){
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, p_width, p_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data_host);
+        //glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, p_width, p_height, 0, GL_RGB, GL_UNSIGNED_BYTE, data_host);
+        glGenerateMipmap(GL_TEXTURE_2D);
+        }
+       else{
+        std::cout << "Failed to load texture" << std::endl;
+        }
        
-       glClearColor(0.5f, 0.3f, 0.3f, 1.0f) ;
+       glClearColor(0.0f, 0.0f, 0.0f, 1.0f) ;
        glClear(GL_COLOR_BUFFER_BIT) ;
-    
+
+       glfwGetCursorPos(window, &p_kernelLauncher->mouse.x, &p_kernelLauncher->mouse.y ) ;
+       
+       p_kernelLauncher->mouse.x = (p_kernelLauncher->mouse.x/p_width)*2.0f- 1 ;
+       p_kernelLauncher->mouse.x =  p_kernelLauncher->mouse.x > 1.0f ? 1.0f :p_kernelLauncher->mouse.x < -1.0f ? -1.0f:p_kernelLauncher->mouse.x ;
+
+       p_kernelLauncher->mouse.y = ((p_height- p_kernelLauncher->mouse.y)/p_height)*2- 1 ;
+       p_kernelLauncher->mouse.y = p_kernelLauncher->mouse.y > 1.0f ? 1.0f : p_kernelLauncher->mouse.y < -1.0f ? -1.0f:p_kernelLauncher->mouse.y ;
+
+   
+       if (p_kernelLauncher->mouse.x ==1 or p_kernelLauncher->mouse.x == 0 or p_kernelLauncher->mouse.y ==1 or p_kernelLauncher->mouse.y == 1) ;
+       else glUniform2f(mouseLocation,  p_kernelLauncher->mouse.x, p_kernelLauncher->mouse.y) ; 
+       
        glBindTexture(GL_TEXTURE_2D, _texture);
        program.use() ;
+       
        glBindVertexArray(_vao);
        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-
+       
        
        glBindVertexArray(0);
        glfwSwapBuffers(window);
@@ -158,6 +201,11 @@ void WindowManager::drawing(GLFWwindow * window, Shader& program){
       
     }
 
+     if (data_host) {
+        delete[] data_host;
+        data_host = nullptr;
+    }
+     
      glfwTerminate() ;
 }
 void WindowManager::simulation(){
