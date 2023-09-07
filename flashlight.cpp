@@ -9,7 +9,8 @@ int main()
     window->GLFWindowGeneration(); // generate the window
     window->simulation() ;
 
-    delete window ;
+    if(window) delete window ;
+    
     window = nullptr ;
     return 0;
 }

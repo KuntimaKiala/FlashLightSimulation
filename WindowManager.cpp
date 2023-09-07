@@ -47,6 +47,9 @@ void WindowManager::GLFWindowGeneration() {
 }
 
 
+void WindowManager::simulation(){
+    renderer();
+}
 
 void WindowManager:: renderer(){
     
@@ -93,8 +96,6 @@ void WindowManager:: renderer(){
     glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(float), (void*)(6 * sizeof(float)));
     glEnableVertexAttribArray(VertexAttributes::vao_texture);
     
-    
-    
     // load and create a texture 
     // -------------------------
     glGenTextures(1, &_texture);
@@ -106,14 +107,10 @@ void WindowManager:: renderer(){
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-    // load image, create texture and generate mipmaps
-    int width, height, nrChannels;
-    // The FileSystem::getPath(...) is part of the GitHub repository so we can find files on any IDE/platform; replace it with your own image path.
-    unsigned char *e;
     p_kernelLauncher = new KernelLauncher(p_width, p_height) ;
-  
     drawing(p_window, programShader);
- 
+    if(p_kernelLauncher) delete p_kernelLauncher ;
+    p_kernelLauncher = nullptr ;
 }
 void WindowManager::createFlashlightTexture(uchar *flashlightTexture) {
     int textureSize = p_width;  // Adjust the size as needed
@@ -197,7 +194,4 @@ void WindowManager::drawing(GLFWwindow * window, Shader& program){
     }
      
      glfwTerminate() ;
-}
-void WindowManager::simulation(){
-    renderer();
 }
